@@ -1,0 +1,33 @@
+name: Daily Quotes
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run daily_quote.py
+        run: python daily_quote.py
+
+      - name: Commit and push to GitHub
+        uses: EndBug/add-and-commit@v7
+        with:
+          message: "Daily quote update"
+          add: "daily_quotes.txt"
+          push: "true"
